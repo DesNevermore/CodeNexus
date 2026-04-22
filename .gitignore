@@ -1,0 +1,6 @@
+**/.DS_Store
+dataset/**/*.jsonl
+dataset/**/*.json
+tasks/
+
+**/**.pyc

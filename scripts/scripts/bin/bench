@@ -1,0 +1,37 @@
+#!/bin/bash
+# ===========================================================================
+# bench — Main CLI entry point for the benchmark toolkit.
+#
+# Usage:
+#   bench <command> [args...]
+#
+# Dispatches <command> to the corresponding <command>.sh script in the
+# parent directory of this file.
+# ===========================================================================
+
+SCRIPT_PATH="${BASH_SOURCE:-$0}"
+SCRIPT_PATH="$(realpath "$SCRIPT_PATH")"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")/.."
+
+source "$SCRIPT_DIR/utils/print.sh"
+
+COMMAND="$1"
+
+if [[ -z "$COMMAND" ]]; then
+	print_error 'missing command'
+	"$SCRIPT_DIR/help.sh"
+	exit 255
+fi
+
+if [[ ! "$COMMAND" =~ ^[a-z]+$ ]]; then
+	print_error "invalid command: $COMMAND"
+	exit 1
+fi
+
+if [[ -e "$SCRIPT_DIR/$COMMAND.sh" ]]; then
+	"$SCRIPT_DIR/$COMMAND.sh" "${@:2}"
+	exit $?
+else
+	print_error "unknown command: $COMMAND"
+	exit 1
+fi
